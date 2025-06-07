@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon TCG Pocket Collection Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>雫 Pokemon TCG Pocket Collection Tracker</h1>
+            <p>Track your collection efficiently - mark missing cards and find tradeable extras!</p>
+        </div>
+
+        <div id="loading" class="loading">
+            Loading Pokemon card database... 売
+        </div>
+
+        <div id="main-content" style="display: none;">
+            <div class="settings-section">
+                <h2>Collection Settings</h2>
+                <div class="setting-row">
+                    <label for="default-quantity">Default cards owned:</label>
+                    <select id="default-quantity">
+                        <option value="2">2 of each card</option>
+                        <option value="3">3 of each card</option>
+                        <option value="1">1 of each card</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="min-keep">Minimum to keep:</label>
+                    <select id="min-keep">
+                        <option value="1">Keep at least 1</option>
+                        <option value="2">Keep at least 2</option>
+                        <option value="0">Keep none (trade all extras)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h2>Collection Overview</h2>
+                <p>Total Cards in Game: <span id="stat-total-cards">--</span></p>
+                <p>Cards Owned: <span id="stat-owned-cards">--</span></p>
+                <p>Cards Missing: <span id="stat-missing-cards">--</span></p>
+                <p>Tradeable Card Types: <span id="stat-tradeable-types">--</span></p>
+                <p>Total Tradeable Copies: <span id="stat-total-tradeable">--</span></p>
+                <p>Collection Completion: <span id="stat-completion">--</span>%</p>
+            </div>
+
+            <div class="sets-section">
+                <h2>1. Mark Missing Cards (Owned: 0)</h2>
+                <p class="instruction">Enter card numbers you have *zero* of for each set. E.g., "1, 5, 25-30"</p>
+                <div id="missing-cards-input-container">
+                    </div>
+            </div>
+
+            <div class="owned-cards-adjustment-section">
+                <h2>2. Adjust Individual Card Quantities (Override Default)</h2>
+                <p class="instruction">For cards you own, adjust the quantity if it's not your default. This helps determine what's truly tradeable.</p>
+                <div class="filter-controls card-adjustment-filters">
+                    <button class="filter-btn active" data-filter="all-owned" data-section="adjustment">All Owned</button>
+                    <button class="filter-btn" data-filter="common-owned" data-section="adjustment">Commons</button>
+                    <button class="filter-btn" data-filter="uncommon-owned" data-section="adjustment">Uncommons</button>
+                    <button class="filter-btn" data-filter="rare-owned" data-section="adjustment">Rares</button>
+                    <button class="filter-btn" data-filter="double-rare-owned" data-section="adjustment">EX</button>
+                    <button class="filter-btn" data-filter="art-rare-owned" data-section="adjustment">Art Rares (1*)</button>
+                    <button class="filter-btn" data-filter="low-owned" data-section="adjustment">Cards ≥ 1, &lt; default</button>
+                </div>
+                <div id="owned-cards-adjustment-container">
+                    <div class="no-results">Select a filter above to view and adjust your owned cards.</div>
+                </div>
+            </div>
+
+
+            <div class="results-section">
+                <h2>3. Your Tradeable Cards</h2>
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">All Tradeable</button>
+                    <button class="filter-btn" data-filter="common">Commons Only</button>
+                    <button class="filter-btn" data-filter="uncommon">Uncommons Only</button>
+                    <button class="filter-btn" data-filter="rare">Rares Only</button>
+                </div>
+                <div id="trade-list" class="trade-list">
+                    <div class="no-results">Enter missing cards and adjust quantities above to see your tradeable collection!</div>
+                </div>
+                <button class="export-btn" id="export-btn">豆 Export Trade List</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/collection.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

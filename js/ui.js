@@ -90,7 +90,8 @@ const UI = {
                 const isDoubleRare = DOUBLE_RARE_CODES.includes(item.card.rarityCode);
                 const isArtRare = item.card.rarityCode === 'AR'; // 1* Art Rare
                 const isTradeable = !Collection.NON_TRADEABLE_RARITIES.includes(item.card.rarityCode) || isDoubleRare;
-                return item.owned > 0 && (isTradeable || isArtRare) && item.card.set === selectedSetCode;
+                // Show all cards in the selected set, regardless of owned count
+                return (isTradeable || isArtRare) && item.card.set === selectedSetCode;
             });
 
         // Apply adjustment section filters
@@ -126,6 +127,9 @@ const UI = {
             const cardElement = document.createElement('div');
             cardElement.classList.add('adjustment-card-item');
             cardElement.dataset.cardId = item.cardId;
+            if (item.owned === 0) {
+                cardElement.classList.add('zero-owned');
+            }
             // Use imageName property to construct the image path
             const imageSrc = item.card.imageName ? `images/cards/${item.card.imageName}` : '';
             cardElement.innerHTML = `
@@ -156,8 +160,10 @@ const UI = {
             let newQuantity = cardData.owned;
             if (btn.classList.contains('plus')) {
                 newQuantity++;
+                cardData.manualOverride = true;
             } else if (btn.classList.contains('minus')) {
                 newQuantity = Math.max(0, newQuantity - 1);
+                cardData.manualOverride = true;
             }
             cardData.owned = newQuantity;
             // Update only the correct display
@@ -332,17 +338,12 @@ const UI = {
      * @param {Object} collectionData - The Collection.userCollection object.
      */
     saveCollectionState() {
-        try {
-            // Only save the 'owned' property and cardId for brevity if cards are static from API
-            const simplifiedCollection = {};
-            for (const cardId in Collection.userCollection) {
-                simplifiedCollection[cardId] = Collection.userCollection[cardId].owned;
-            }
-            localStorage.setItem('fullCollectionState', JSON.stringify(simplifiedCollection));
-            console.log('Full collection state saved to local storage.');
-        } catch (e) {
-            console.error('Error saving full collection state to local storage', e);
+        // Only save owned quantities, not manualOverride flag (recompute on load)
+        const state = {};
+        for (const cardId in Collection.userCollection) {
+            state[cardId] = Collection.userCollection[cardId].owned;
         }
+        localStorage.setItem('collectionState', JSON.stringify(state));
     },
 
     /**
@@ -350,12 +351,8 @@ const UI = {
      * @returns {Object|null} The loaded collection state or null if not found/error.
      */
     loadCollectionState() {
-        try {
-            const state = localStorage.getItem('fullCollectionState');
-            return state ? JSON.parse(state) : null;
-        } catch (e) {
-            console.error('Error loading full collection state from local storage', e);
-            return null;
-        }
+        // Load owned quantities from localStorage
+        const state = JSON.parse(localStorage.getItem('collectionState') || '{}');
+        return state;
     }
 };

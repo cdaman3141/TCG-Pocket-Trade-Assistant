@@ -315,6 +315,12 @@ body {
     text-align: center;
 }
 
+.adjustment-card-item.zero-owned {
+    opacity: 0.5;
+    filter: grayscale(80%);
+    pointer-events: auto; /* Still allow interaction */
+}
+
 .adjustment-card-item .card-number {
     font-weight: bold;
     color: #007bff; /* Blue for numbers */

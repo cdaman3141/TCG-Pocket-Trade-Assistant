@@ -38,8 +38,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (storedCollectionState) {
             // Iterate through stored state and apply owned quantities
             for (const cardId in storedCollectionState) {
-                if (Collection.userCollection[cardId]) { // Ensure card exists in API data
+                if (Collection.userCollection[cardId]) {
                     Collection.userCollection[cardId].owned = storedCollectionState[cardId];
+                    // If the stored value differs from the default, set manualOverride
+                    if (storedCollectionState[cardId] !== Collection.settings.defaultQuantity) {
+                        Collection.userCollection[cardId].manualOverride = true;
+                    }
                 }
             }
             console.log('Full collection state loaded from local storage.');

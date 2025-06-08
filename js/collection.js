@@ -35,7 +35,8 @@ const Collection = {
             const cardId = this.getCardId(card.set, card.number);
             this.userCollection[cardId] = {
                 owned: defaultQuantity,
-                card: card
+                card: card,
+                manualOverride: false
             };
         });
 
@@ -58,12 +59,15 @@ const Collection = {
      */
     updateSettings(newSettings) {
         this.settings = { ...this.settings, ...newSettings };
-        
         // If default quantity changed, reinitialize collection
         if (newSettings.defaultQuantity !== undefined) {
             const currentMissing = this.getAllMissingCards();
-            this.initialize(newSettings.defaultQuantity);
-            
+            // Only update cards that have not been manually overridden
+            Object.entries(this.userCollection).forEach(([cardId, data]) => {
+                if (!data.manualOverride) {
+                    data.owned = newSettings.defaultQuantity;
+                }
+            });
             // Reapply missing cards
             Object.entries(currentMissing).forEach(([setCode, missingNumbers]) => {
                 if (missingNumbers.length > 0) {

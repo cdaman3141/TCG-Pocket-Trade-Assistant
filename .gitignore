@@ -1,0 +1,40 @@
+# Node/npm artifacts (if you ever add node tooling)
+node_modules/
+
+# Python artifacts (if you ever use Python scripts)
+__pycache__/
+*.pyc
+
+# macOS/Linux/Windows system files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.vscode/
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Shell history
+*.sh~
+
+# Download scripts and placeholders (not needed for deployment)
+download_card_images.sh
+images/cards/.gitkeep
+
+# Miscellaneous
+*.bak
+*.tmp
+
+# Ignore local test/backup files
+*.local
+*.test
+
+# Ignore any personal notes
+notes.txt
+
+# If you use build tools in the future, add their output folders here
+# dist/
+# build/

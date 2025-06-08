@@ -60,23 +60,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Event Listeners
         defaultQuantitySelect.addEventListener('change', (event) => {
             const newDefaultQuantity = parseInt(event.target.value);
-            Collection.updateSettings({ defaultQuantity: newDefaultQuantity });
+            // Update the setting
+            Collection.settings.defaultQuantity = newDefaultQuantity;
             UI.saveSettings(Collection.settings);
-            // Re-initialize collection to reset all owned quantities based on new default
-            Collection.initialize(newDefaultQuantity);
-            // If there was a stored state, re-apply it *after* re-initialization
-            const reStoredCollectionState = UI.loadCollectionState();
-            if (reStoredCollectionState) {
-                for (const cardId in reStoredCollectionState) {
-                    if (Collection.userCollection[cardId]) {
-                        Collection.userCollection[cardId].owned = reStoredCollectionState[cardId];
-                    }
+            // For each card, if it is NOT manually overridden, set to new default
+            Object.values(Collection.userCollection).forEach(cardData => {
+                if (!cardData.manualOverride) {
+                    cardData.owned = newDefaultQuantity;
                 }
-            }
-            UI.renderOwnedCardsAdjustment(); // Re-render adjustment UI to reflect changes
+            });
+            // After changing, update manualOverride flags: if owned == default, clear manualOverride
+            Object.values(Collection.userCollection).forEach(cardData => {
+                if (cardData.owned === newDefaultQuantity) {
+                    cardData.manualOverride = false;
+                }
+            });
+            UI.renderOwnedCardsAdjustment();
             UI.updateTradeList();
             UI.updateStatsDisplay();
-            UI.saveCollectionState(); // Save the new state after default change and re-application
+            UI.saveCollectionState();
         });
 
         minKeepSelect.addEventListener('change', (event) => {
